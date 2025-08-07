@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zona Sul - AI Food Waste Reduction Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .heart-line {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .brand-line {
+            width: 60px;
+            height: 2px;
+            background: #6b7280;
+            border-radius: 1px;
+        }
+        
+        .brand-heart {
+            width: 24px;
+            height: 24px;
+            background: #dc2626;
+            transform: rotate(-45deg);
+            position: relative;
+            border-radius: 0 0 0 2px;
+        }
+        
+        .brand-heart:before,
+        .brand-heart:after {
+            content: '';
+            width: 24px;
+            height: 24px;
+            position: absolute;
+            background: #dc2626;
+            border-radius: 50%;
+        }
+        
+        .brand-heart:before {
+            top: -12px;
+            left: 0;
+        }
+        
+        .brand-heart:after {
+            top: 0;
+            right: -12px;
+        }
+        
+        .header-brand h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .header-brand .zona-sul {
+            color: #dc2626;
+            text-shadow: 0 0 10px rgba(220, 38, 38, 0.3);
+        }
+        
+        .header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-top: 0.25rem;
+            font-style: italic;
+        }
+        
+        .ai-subtitle {
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            opacity: 0.8;
+        }
+        
+        .demo-badge {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 0.75rem 1.25rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            background: white;
+            padding: 1rem;
+            border-radius: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-tab {
+            background: #f8f9fa;
+            border: 1px solid #e5e7eb;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: #374151;
+            transition: all 0.2s;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .nav-tab.active {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            color: white;
+            border-color: #dc2626;
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+        }
+        
+        .nav-tab:hover:not(.active) {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+            color: #111827;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+        
+        .grid-cols-4 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+        
+        .grid-cols-2 {
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+        }
+        
+        .card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+            border: 1px solid #f3f4f6;
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-1px);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .card-subtitle {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: 0.25rem;
+        }
+        
+        .metric-large {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #111827;
+        }
+        
+        .metric-medium {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .badge-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .badge-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .badge-danger {
+            background: #fecaca;
+            color: #991b1b;
+        }
+        
+        .badge-info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .badge-zona-red {
+            background: #dc2626;
+            color: white;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 0.5rem;
+            background: #e5e7eb;
+            border-radius: 0.25rem;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #dc2626, #991b1b);
+            transition: width 0.3s;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid;
+        }
+        
+        .alert-danger {
+            background: #fef2f2;
+            border-color: #dc2626;
+            color: #991b1b;
+        }
+        
+        .alert-warning {
+            background: #fffbeb;
+            border-color: #f59e0b;
+            color: #92400e;
+        }
+        
+        .item-list {
+            space-y: 1rem;
+        }
+        
+        .item {
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .item-info h4 {
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .item-info p {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .item-actions {
+            text-align: right;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+        }
+        
+        .chef-card {
+            border: 2px solid #e5e7eb;
+            transition: all 0.2s;
+        }
+        
+        .chef-card:hover {
+            border-color: #dc2626;
+            transform: translateY(-2px);
+        }
+        
+        .chef-card.active {
+            border-color: #dc2626;
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+        }
+        
+        .recipe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .recipe-card {
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+            border: 1px solid #f3f4f6;
+        }
+        
+        .recipe-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .recipe-header {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            color: white;
+            padding: 1rem;
+        }
+        
+        .recipe-body {
+            padding: 1.5rem;
+        }
+        
+        .ingredient-tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: #f59e0b;
+            color: white;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            margin: 0.25rem 0.25rem 0.25rem 0;
+        }
+        
+        .whatsapp-alert {
+            background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .manager-card {
+            background: #f8f9fa;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .customer-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .status-dot {
+            width: 0.75rem;
+            height: 0.75rem;
+            border-radius: 50%;
+        }
+        
+        .status-declining {
+            background: #f59e0b;
+        }
+        
+        .status-absent {
+            background: #dc2626;
+        }
+        
+        .status-healthy {
+            background: #10b981;
+        }
+        
+        .zona-gradient {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 50%, #374151 100%);
+        }
+        
+        .carioca-section {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border: 2px solid #dc2626;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+        
+        .carioca-heart {
+            color: #dc2626;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header {
+                padding: 1rem;
+            }
+            
+            .header-brand h1 {
+                font-size: 1.5rem;
+            }
+            
+            .grid-cols-4 {
+                grid-template-columns: 1fr;
+            }
+            
+            .grid-cols-2 {
+                grid-template-columns: 1fr;
+            }
+            
+            .brand-line {
+                width: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-brand">
+            <div class="brand-logo">
+                <div class="heart-line">
+                    <div class="brand-line"></div>
+                    <div class="brand-heart"></div>
+                </div>
+            </div>
+            <div>
+                <h1>SUPERMERCADO <span class="zona-sul">ZONA SUL</span></h1>
+                <div class="subtitle">Cariocas de Coração</div>
+                <div class="ai-subtitle">AI-Powered Food Waste Reduction Platform</div>
+            </div>
+        </div>
+        <div class="demo-badge">
+            Demo Environment<br>
+            <strong>Proof of Concept</strong>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('overview')" data-tab="overview">
+                📊 Overview
+            </button>
+            <button class="nav-tab" onclick="showTab('inventory')" data-tab="inventory">
+                📦 Inventory
+            </button>
+            <button class="nav-tab" onclick="showTab('customers')" data-tab="customers">
+                👥 Customers
+            </button>
+            <button class="nav-tab" onclick="showTab('forecast')" data-tab="forecast">
+                📈 Forecast
+            </button>
+            <button class="nav-tab" onclick="showTab('chef-lidy')" data-tab="chef-lidy">
+                👨‍🍳 Chef AI
+            </button>
+            <button class="nav-tab" onclick="showTab('insights')" data-tab="insights">
+                💡 Insights
+            </button>
+        </div>
+
+        <!-- Overview Tab -->
+        <div id="overview" class="tab-content active">
+            <div class="carioca-section">
+                <div class="carioca-heart">❤️</div>
+                <h2 style="color: #dc2626; margin-bottom: 0.5rem;">Seja bem-vindo à casa da Gastronomia Carioca!</h2>
+                <p style="color: #991b1b; font-style: italic;">Transformando desperdício em oportunidade com inteligência artificial</p>
+            </div>
+            
+            <div class="grid grid-cols-4">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Redução de Desperdício</span>
+                        <span class="badge badge-zona-red">↓32%</span>
+                    </div>
+                    <div class="metric-large" style="color: #dc2626;">32%</div>
+                    <div class="card-subtitle">vs mês baseline</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Receita Incremental</span>
+                        <span class="badge badge-success">+847K</span>
+                    </div>
+                    <div class="metric-large" style="color: #10b981;">R$ 847K</div>
+                    <div class="card-subtitle">gerada mensalmente</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Engajamento Cliente</span>
+                        <span class="badge badge-info">+78%</span>
+                    </div>
+                    <div class="metric-large" style="color: #3b82f6;">78%</div>
+                    <div class="card-subtitle">taxa click receitas</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Precisão IA</span>
+                        <span class="badge badge-warning">94.2%</span>
+                    </div>
+                    <div class="metric-large" style="color: #f59e0b;">94.2%</div>
+                    <div class="card-subtitle">confiança previsão</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2" style="margin-top: 2rem;">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Visão Geral da Solução IA</span>
+                    </div>
+                    <div style="margin-bottom: 1.5rem;">
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Inteligência de Estoque</span>
+                                <span style="font-weight: 600; color: #dc2626;">Ativo</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%;"></div>
+                            </div>
+                            <div style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem;">
+                                Monitoramento contínuo com alertas de expiração
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Segmentação de Clientes</span>
+                                <span style="font-weight: 600; color: #dc2626;">6 Segmentos</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%;"></div>
+                            </div>
+                            <div style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem;">
+                                Clustering comportamental de 10.000+ clientes cariocas
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Engine de Receitas</span>
+                                <span style="font-weight: 600; color: #dc2626;">Chef Lidy</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 92%;"></div>
+                            </div>
+                            <div style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem;">
+                                Sugestões personalizadas usando estoque em risco
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Simulação Impacto de Negócio</span>
+                    </div>
+                    <div style="text-align: center; margin-bottom: 1.5rem;">
+                        <div style="display: inline-block; margin: 0 1rem;">
+                            <div class="metric-medium" style="color: #dc2626;">2.3M</div>
+                            <div style="font-size: 0.875rem; color: #6b7280;">Itens Salvos</div>
+                        </div>
+                        <div style="display: inline-block; margin: 0 1rem;">
+                            <div class="metric-medium" style="color: #10b981;">156%</div>
+                            <div style="font-size: 0.875rem; color: #6b7280;">ROI Projetado</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #fef2f2; padding: 1rem; border-radius: 0.75rem; border: 1px solid #fecaca;">
+                        <h4 style="color: #991b1b; margin-bottom: 0.5rem;">Fatores Chave de Sucesso</h4>
+                        <ul style="color: #991b1b; font-size: 0.875rem; padding-left: 1.25rem;">
+                            <li>Retenção de clientes-alvo aumenta 26%</li>
+                            <li>Receitas personalizadas aumentam cesta 15%</li>
+                            <li>Fidelização melhora 12% em segmentos-alvo</li>
+                            <li>Ganhos operacionais através de automação</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inventory Tab -->
+        <div id="inventory" class="tab-content">
+            <div class="grid grid-cols-4">
+                <div class="card">
+                    <div class="card-title">Total SKUs</div>
+                    <div class="metric-large">30</div>
+                    <div class="card-subtitle">Itens perecíveis rastreados</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">Itens em Risco</div>
+                    <div class="metric-large" style="color: #f59e0b;">7</div>
+                    <div class="card-subtitle">Expiram em 3 dias</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">Valor Total Estoque</div>
+                    <div class="metric-large">R$ 22.8K</div>
+                    <div class="card-subtitle">Valor atual do estoque</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">Valor em Risco</div>
+                    <div class="metric-large" style="color: #dc2626;">R$ 10.1K</div>
+                    <div class="card-subtitle">Valor potencial de desperdício</div>
+                </div>
+            </div>
+
+            <div class="alert alert-danger">
+                <h3 style="margin-bottom: 0.75rem;">⚠️ Itens Prioritários - Ação Imediata Necessária</h3>
+                <p>Estes itens expiram em 3 dias e devem ser priorizados nas recomendações do Chef Lidy</p>
+            </div>
+
+            <div class="card">
+                <div class="item-list">
+                    <div class="item">
+                        <div class="item-info">
+                            <h4>Morangos Frescos</h4>
+                            <p>SKU: STR001 • Estoque: 245 unidades</p>
+                        </div>
+                        <div class="item-actions">
+                            <div style="margin-bottom: 0.5rem;">
+                                <span class="badge badge-danger">2 dias até expirar</span>
+                            </div>
+                            <button class="btn btn-primary" onclick="generateRecipe('morangos')">Gerar Receita</button>
+                        </div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="item-info">
+                            <h4>Rúcula Baby</h4>
+                            <p>SKU: ARG001 • Estoque: 156 unidades</p>
+                        </div>
+                        <div class="item-actions">
+                            <div style="margin-bottom: 0.5rem;">
+                                <span class="badge badge-danger">2 dias até expirar</span>
+                            </div>
+                            <button class="btn btn-primary" onclick="generateRecipe('rucula')">Gerar Receita</button>
+                        </div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="item-info">
+                            <h4>Camarão Tigre</h4>
+                            <p>SKU: SHR001 • Estoque: 67 unidades</p>
+                        </div>
+                        <div class="item-actions">
+                            <div style="margin-bottom: 0.5rem;">
+                                <span class="badge badge-danger">2 dias até expirar</span>
+                            </div>
+                            <button class="btn btn-primary" onclick="generateRecipe('camarao')">Gerar Receita</button>
+                        </div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="item-info">
+                            <h4>Pão Artesanal</h4>
+                            <p>SKU: BRD001 • Estoque: 78 unidades</p>
+                        </div>
+                        <div class="item-actions">
+                            <div style="margin-bottom: 0.5rem;">
+                                <span class="badge badge-danger">2 dias até expirar</span>
+                            </div>
+                            <button class="btn btn-primary" onclick="generateRecipe('pao')">Gerar Receita</button>
+                        </div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="item-info">
+                            <h4>Salmão Atlântico</h4>
+                            <p>SKU: SAL001 • Estoque: 45 unidades</p>
+                        </div>
+                        <div class="item-actions">
+                            <div style="margin-bottom: 0.5rem;">
+                                <span class="badge badge-danger">2 dias até expirar</span>
+                            </div>
+                            <button class="btn btn-primary" onclick="generateRecipe('salmao')">Gerar Receita</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customers Tab -->
+        <div id="customers" class="tab-content">
+            <div class="grid grid-cols-4">
+                <div class="card">
+                    <div class="card-title">Total Clientes</div>
+                    <div class="metric-large">10,000</div>
+                    <div class="card-subtitle">Ativos nos últimos 60 dias</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">Cesta Média</div>
+                    <div class="metric-large">R$ 166</div>
+                    <div class="card-subtitle">Todos os segmentos</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">Target Receitas</div>
+                    <div class="metric-large" style="color: #dc2626;">6,918</div>
+                    <div class="card-subtitle">Alta oportunidade receitas</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">Segmentos Ativos</div>
+                    <div class="metric-large">6</div>
+                    <div class="card-subtitle">Clusters comportamentais</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Distribuição de Segmentos de Clientes Cariocas</span>
+                    <span class="card-subtitle">Análise de 10.000 clientes baseada no comportamento de compra</span>
+                </div>
+                
+                <div style="margin-top: 1.5rem;">
+                    <div style="margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span style="font-weight: 600;">💚 Foco em Vida Saudável</span>
+                            <span>1,842 clientes • 18.4%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 18.4%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span style="font-weight: 600;">👨‍👩‍👧‍👦 Famílias Cariocas Semanais</span>
+                            <span>2,156 clientes • 21.6%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 21.6%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span style="font-weight: 600;">⏰ Compradores de Última Hora</span>
+                            <span>1,634 clientes • 16.3%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 16.3%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span style="font-weight: 600;">🍽️ Entusiastas Gourmet</span>
+                            <span>987 clientes • 9.9%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 9.9%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span style="font-weight: 600;">🌱 Consumidores Eco-Conscientes</span>
+                            <span>1,456 clientes • 14.6%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 14.6%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span style="font-weight: 600;">💰 Compradores Conscientes de Preço</span>
+                            <span>1,925 clientes • 19.3%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 19.3%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customer Retention Alerts -->
+            <div class="alert alert-warning">
+                <h3 style="margin-bottom: 0.75rem;">📉 Alertas de Retenção de Clientes</h3>
+                <p>Estes clientes mostram comportamento em declínio e precisam de intervenção direcionada com receitas personalizadas</p>
+            </div>
+
+            <div class="grid grid-cols-2">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">💚 Foco em Vida Saudável</span>
+                        <span class="badge badge-info">1,842 clientes • 18.4% da base total</span>
+                    </div>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="font-weight: 500;">Cesta Média</span>
+                            <span style="font-weight: 500;">Frequência</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="font-size: 1.25rem; font-weight: 700; color: #dc2626;">R$ 156.8</span>
+                            <span style="font-size: 1.25rem; font-weight: 700; color: #dc2626;">2.3x/semana</span>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <div style="font-weight: 500; margin-bottom: 0.5rem;">Categorias Top</div>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <span class="badge badge-success">Vegetais Orgânicos</span>
+                            <span class="badge badge-success">Proteínas Magras</span>
+                            <span class="badge badge-success">Superalimentos</span>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <div style="font-weight: 500; margin-bottom: 0.5rem;">Comportamentos Chave</div>
+                        <ul style="font-size: 0.875rem; color: #6b7280; padding-left: 1rem;">
+                            <li>Alta disposição para pagar premium por orgânicos</li>
+                            <li>Lê rótulos de ingredientes cuidadosamente</li>
+                            <li>Responde bem ao conteúdo nutricional em receitas</li>
+                            <li>Compra principalmente nos finais de semana</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: #dc2626; color: white; padding: 0.75rem; border-radius: 0.5rem;">
+                        <div style="font-weight: 500;">Oportunidade Marketing de Receitas</div>
+                        <div style="font-size: 0.875rem; opacity: 0.9;">Alta - adora experimentar novas receitas saudáveis</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">👨‍👩‍👧‍👦 Famílias Cariocas Semanais</span>
+                        <span class="badge badge-info">2,156 clientes • 21.6% da base total</span>
+                    </div>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="font-weight: 500;">Cesta Média</span>
+                            <span style="font-weight: 500;">Frequência</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="font-size: 1.25rem; font-weight: 700; color: #10b981;">R$ 234.5</span>
+                            <span style="font-size: 1.25rem; font-weight: 700; color: #10b981;">1.2x/semana</span>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <div style="font-weight: 500; margin-bottom: 0.5rem;">Categorias Top</div>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <span class="badge badge-info">Pacotes Família</span>
+                            <span class="badge badge-info">Laticínios</span>
+                            <span class="badge badge-info">Frutas</span>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <div style="font-weight: 500; margin-bottom: 0.5rem;">Comportamentos Chave</div>
+                        <ul style="font-size: 0.875rem; color: #6b7280; padding-left: 1rem;">
+                            <li>Maiores cestas da loja</li>
+                            <li>Conscientes de preço mas focados em qualidade</li>
+                            <li>Compram com listas detalhadas</li>
+                            <li>Preferem visitas de sábado de manhã</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: #10b981; color: white; padding: 0.75rem; border-radius: 0.5rem;">
+                        <div style="font-weight: 500;">Oportunidade Marketing de Receitas</div>
+                        <div style="font-size: 0.875rem; opacity: 0.9;">Média - interessadas em meal prep familiar</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Forecast Tab -->
+        <div id="forecast" class="tab-content">
+            <div class="grid grid-cols-4">
+                <div class="card">
+                    <div class="card-title">Precisão Previsão</div>
+                    <div class="metric-large" style="color: #dc2626;">93.6%</div>
+                    <div class="card-subtitle">Confiança média</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">Itens Críticos</div>
+                    <div class="metric-large" style="color: #dc2626;">3</div>
+                    <div class="card-subtitle">Precisam ação imediata</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">Risco Falta Estoque</div>
+                    <div class="metric-large" style="color: #f59e0b;">2</div>
+                    <div class="card-subtitle">Itens precisam reposição</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">Itens Excesso</div>
+                    <div class="metric-large" style="color: #3b82f6;">2</div>
+                    <div class="card-subtitle">Oportunidades receita</div>
+                </div>
+            </div>
+
+            <div class="alert alert-danger">
+                <h3 style="margin-bottom: 0.75rem;">🚨 Situações Críticas de Estoque - Ação Imediata Necessária</h3>
+                <p>Itens com menos de 3 dias de estoque baseado na demanda prevista</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Análise de Previsão de Demanda 30 Dias</span>
+                    <span class="card-subtitle">Predições IA para SKUs principais com intervalos de confiança</span>
+                </div>
+
+                <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+                    <thead>
+                        <tr style="background: #f8f9fa; border-bottom: 2px solid #e5e7eb;">
+                            <th style="padding: 0.75rem; text-align: left; font-weight: 600;">Produto</th>
+                            <th style="padding: 0.75rem; text-align: center; font-weight: 600;">Estoque Atual</th>
+                            <th style="padding: 0.75rem; text-align: center; font-weight: 600;">Demanda Prevista</th>
+                            <th style="padding: 0.75rem; text-align: center; font-weight: 600;">Confiança</th>
+                            <th style="padding: 0.75rem; text-align: center; font-weight: 600;">Tendência</th>
+                            <th style="padding: 0.75rem; text-align: center; font-weight: 600;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid #e5e7eb;">
+                            <td style="padding: 0.75rem;">
+                                <div style="font-weight: 600;">Morangos Frescos</div>
+                                <div style="font-size: 0.75rem; color: #6b7280;">STR001 • Frutas</div>
+                            </td>
+                            <td style="padding: 0.75rem; text-align: center; font-weight: 600;">245</td>
+                            <td style="padding: 0.75rem; text-align: center; font-weight: 600;">189</td>
+                            <td style="padding: 0.75rem; text-align: center;">
+                                <div class="progress-bar" style="width: 60px; margin: 0 auto;">
+                                    <div class="progress-fill" style="width: 94.2%;"></div>
+                                </div>
+                                <div style="font-size: 0.75rem; margin-top: 0.25rem;">94.2%</div>
+                            </td>
+                            <td style="padding: 0.75rem; text-align: center; color: #dc2626;">📉</td>
+                            <td style="padding: 0.75rem; text-align: center;">
+                                <span class="badge badge-info">Excesso</span>
+                            </td>
+                        </tr>
+                        
+                        <tr style="border-bottom: 1px solid #e5e7eb;">
+                            <td style="padding: 0.75rem;">
+                                <div style="font-weight: 600;">Peito de Frango</div>
+                                <div style="font-size: 0.75rem; color: #6b7280;">CHK001 • Carnes</div>
+                            </td>
+                            <td style="padding: 0.75rem; text-align: center; font-weight: 600;">89</td>
+                            <td style="padding: 0.75rem; text-align: center; font-weight: 600;">124</td>
+                            <td style="padding: 0.75rem; text-align: center;">
+                                <div class="progress-bar" style="width: 60px; margin: 0 auto;">
+                                    <div class="progress-fill" style="width: 96.8%;"></div>
+                                </div>
+                                <div style="font-size: 0.75rem; margin-top: 0.25rem;">96.8%</div>
+                            </td>
+                            <td style="padding: 0.75rem; text-align: center; color: #10b981;">📈</td>
+                            <td style="padding: 0.75rem; text-align: center;">
+                                <span class="badge badge-warning">Falta Estoque</span>
+                            </td>
+                        </tr>
+                        
+                        <tr style="border-bottom: 1px solid #e5e7eb;">
+                            <td style="padding: 0.75rem;">
+                                <div style="font-weight: 600;">Camarão Tigre</div>
+                                <div style="font-size: 0.75rem; color: #6b7280;">SHR001 • Frutos do Mar</div>
+                            </td>
+                            <td style="padding: 0.75rem; text-align: center; font-weight: 600;">67</td>
+                            <td style="padding: 0.75rem; text-align: center; font-weight: 600;">145</td>
+                            <td style="padding: 0.75rem; text-align: center;">
+                                <div class="progress-bar" style="width: 60px; margin: 0 auto;">
+                                    <div class="progress-fill" style="width: 91.3%;"></div>
+                                </div>
+                                <div style="font-size: 0.75rem; margin-top: 0.25rem;">91.3%</div>
+                            </td>
+                            <td style="padding: 0.75rem; text-align: center; color: #10b981;">📈</td>
+                            <td style="padding: 0.75rem; text-align: center;">
+                                <span class="badge badge-danger">Crítico</span>
+                            </td>
+                        </tr>
+                        
+                        <tr style="border-bottom: 1px solid #e5e7eb;">
+                            <td style="padding: 0.75rem;">
+                                <div style="font-weight: 600;">Pão Artesanal</div>
+                                <div style="font-size: 0.75rem; color: #6b7280;">BRD001 • Padaria</div>
+                            </td>
+                            <td style="padding: 0.75rem; text-align: center; font-weight: 600;">78</td>
+                            <td style="padding: 0.75rem; text-align: center; font-weight: 600;">156</td>
+                            <td style="padding: 0.75rem; text-align: center;">
+                                <div class="progress-bar" style="width: 60px; margin: 0 auto;">
+                                    <div class="progress-fill" style="width: 93.4%;"></div>
+                                </div>
+                                <div style="font-size: 0.75rem; margin-top: 0.25rem;">93.4%</div>
+                            </td>
+                            <td style="padding: 0.75rem; text-align: center; color: #10b981;">📈</td>
+                            <td style="padding: 0.75rem; text-align: center;">
+                                <span class="badge badge-danger">Crítico</span>
+                            </td>
+                        </tr>
+                        
+                        <tr style="border-bottom: 1px solid #e5e7eb;">
+                            <td style="padding: 0.75rem;">
+                                <div style="font-weight: 600;">Salmão Atlântico</div>
+                                <div style="font-size: 0.75rem; color: #6b7280;">SAL001 • Frutos do Mar</div>
+                            </td>
+                            <td style="padding: 0.75rem; text-align: center; font-weight: 600;">45</td>
+                            <td style="padding: 0.75rem; text-align: center; font-weight: 600;">89</td>
+                            <td style="padding: 0.75rem; text-align: center;">
+                                <div class="progress-bar" style="width: 60px; margin: 0 auto;">
+                                    <div class="progress-fill" style="width: 92.8%;"></div>
+                                </div>
+                                <div style="font-size: 0.75rem; margin-top: 0.25rem;">92.8%</div>
+                            </td>
+                            <td style="padding: 0.75rem; text-align: center; color: #10b981;">📈</td>
+                            <td style="padding: 0.75rem; text-align: center;">
+                                <span class="badge badge-danger">Crítico</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Chef Lidy Tab -->
+        <div id="chef-lidy" class="tab-content">
+            <div class="carioca-section zona-gradient" style="color: white;">
+                <h2 style="font-size: 2rem; margin-bottom: 0.5rem;">👨‍🍳 Conheça Chef Lidy</h2>
+                <p style="font-size: 1.125rem; opacity: 0.9;">Seu companheiro culinário IA, transformando ingredientes em risco em oportunidades deliciosas!</p>
+            </div>
+
+            <!-- Chef Selection -->
+            <div class="grid grid-cols-4" style="margin-bottom: 2rem;">
+                <div class="chef-card card active" onclick="selectChef('lidy')">
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">👨‍🍳</div>
+                        <h3 style="color: #dc2626; margin-bottom: 0.5rem;">Chef Lidy</h3>
+                        <p style="font-size: 0.875rem; color: #6b7280;">Expert Culinário Geral</p>
+                        <div class="badge badge-zona-red" style="margin-top: 0.5rem;">Ativo</div>
+                    </div>
+                </div>
+                
+                <div class="chef-card card" onclick="selectChef('jimmy')">
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🥩</div>
+                        <h3 style="color: #6b7280; margin-bottom: 0.5rem;">Chef Jimmy</h3>
+                        <p style="font-size: 0.875rem; color: #6b7280;">Especialista em Carnes & Churrasco</p>
+                        <div class="badge badge-warning" style="margin-top: 0.5rem;">Em Breve</div>
+                    </div>
+                </div>
+                
+                <div class="chef-card card" onclick="selectChef('lorena')">
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🥬</div>
+                        <h3 style="color: #6b7280; margin-bottom: 0.5rem;">Chef Lorena</h3>
+                        <p style="font-size: 0.875rem; color: #6b7280;">Pioneira Plant-Based</p>
+                        <div class="badge badge-warning" style="margin-top: 0.5rem;">Em Breve</div>
+                    </div>
+                </div>
+                
+                <div class="chef-card card">
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">➕</div>
+                        <h3 style="color: #6b7280; margin-bottom: 0.5rem;">Mais Chefs</h3>
+                        <p style="font-size: 0.875rem; color: #6b7280;">Culinária Especializada</p>
+                        <div class="badge" style="background: #f1f5f9; color: #6b7280; margin-top: 0.5rem;">Futuro</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current Recipe Recommendations -->
+            <div class="recipe-grid">
+                <div class="recipe-card">
+                    <div class="recipe-header">
+                        <h3 style="margin-bottom: 0.5rem;">🥗 Salada Power de Morango e Rúcula</h3>
+                        <p style="font-size: 0.875rem; opacity: 0.9;">"Forma perfeita de usar esses morangos lindos antes que percam o brilho!" - Chef Lidy</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+                            <span>⏱️ 15 min</span>
+                            <span>👥 Serve 4</span>
+                            <span style="background: rgba(255,255,255,0.2); padding: 0.25rem 0.5rem; border-radius: 0.5rem;">Fácil</span>
+                        </div>
+                    </div>
+                    <div class="recipe-body">
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Ingredientes em Risco Usados:</strong>
+                            <div style="margin-top: 0.5rem;">
+                                <span class="ingredient-tag">Morangos Frescos</span>
+                                <span class="ingredient-tag">Rúcula Baby</span>
+                                <span class="ingredient-tag">Camarão Tigre</span>
+                            </div>
+                        </div>
+                        
+                        <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">
+                            Combine rúcula fresca com morangos fatiados e camarão grelhado para um almoço rico em proteína.
+                        </p>
+                        
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Segmento Alvo:</strong>
+                            <div class="badge badge-success" style="margin-left: 0.5rem;">Foco em Vida Saudável</div>
+                        </div>
+                        
+                        <button class="btn btn-primary" style="width: 100%;" onclick="showRecipeDetails('salada-morango')">
+                            💚 Ver Receita Completa
+                        </button>
+                    </div>
+                </div>
+
+                <div class="recipe-card">
+                    <div class="recipe-header">
+                        <h3 style="margin-bottom: 0.5rem;">🍞 Bruschetta Rápida de Pão Artesanal</h3>
+                        <p style="font-size: 0.875rem; opacity: 0.9;">"Transforme pão do dia anterior em algo mágico! Zero desperdício, sabor total." - Chef Lidy</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+                            <span>⏱️ 10 min</span>
+                            <span>👥 Serve 6</span>
+                            <span style="background: rgba(255,255,255,0.2); padding: 0.25rem 0.5rem; border-radius: 0.5rem;">Fácil</span>
+                        </div>
+                    </div>
+                    <div class="recipe-body">
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Ingredientes em Risco Usados:</strong>
+                            <div style="margin-top: 0.5rem;">
+                                <span class="ingredient-tag">Pão Artesanal</span>
+                                <span class="ingredient-tag">Tomate Cereja</span>
+                                <span class="ingredient-tag">Mozzarella Fresca</span>
+                            </div>
+                        </div>
+                        
+                        <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">
+                            Toste fatias de pão, cubra com tomates picados e mozzarella rasgada.
+                        </p>
+                        
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Segmento Alvo:</strong>
+                            <div class="badge badge-warning" style="margin-left: 0.5rem;">Compradores de Última Hora</div>
+                        </div>
+                        
+                        <button class="btn btn-primary" style="width: 100%;" onclick="showRecipeDetails('bruschetta')">
+                            💚 Ver Receita Completa
+                        </button>
+                    </div>
+                </div>
+
+                <div class="recipe-card">
+                    <div class="recipe-header">
+                        <h3 style="margin-bottom: 0.5rem;">🐟 Salmão Tropical com Manga</h3>
+                        <p style="font-size: 0.875rem; opacity: 0.9;">"As mangas doces equilibram perfeitamente o salmão rico - um prato de restaurante em casa!" - Chef Lidy</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+                            <span>⏱️ 25 min</span>
+                            <span>👥 Serve 2</span>
+                            <span style="background: rgba(255,255,255,0.2); padding: 0.25rem 0.5rem; border-radius: 0.5rem;">Médio</span>
+                        </div>
+                    </div>
+                    <div class="recipe-body">
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Ingredientes em Risco Usados:</strong>
+                            <div style="margin-top: 0.5rem;">
+                                <span class="ingredient-tag">Salmão Atlântico</span>
+                                <span class="ingredient-tag">Mangas Maduras</span>
+                                <span class="ingredient-tag">Rúcula Baby</span>
+                            </div>
+                        </div>
+                        
+                        <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">
+                            Grelhe o salmão, sirva com salsa de manga sobre cama de rúcula.
+                        </p>
+                        
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Segmento Alvo:</strong>
+                            <div class="badge badge-info" style="margin-left: 0.5rem;">Entusiastas Gourmet</div>
+                        </div>
+                        
+                        <button class="btn btn-primary" style="width: 100%;" onclick="showRecipeDetails('salmao-manga')">
+                            💚 Ver Receita Completa
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recipe Performance Metrics -->
+            <div class="card" style="margin-top: 2rem;">
+                <div class="card-header">
+                    <span class="card-title">📊 Performance Campanha de Receitas (Últimos 7 Dias)</span>
+                </div>
+                
+                <div class="grid grid-cols-4">
+                    <div style="text-align: center;">
+                        <div class="metric-large" style="color: #dc2626;">12,847</div>
+                        <div style="font-size: 0.875rem; color: #6b7280;">Receitas Enviadas</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="metric-large" style="color: #10b981;">84.2%</div>
+                        <div style="font-size: 0.875rem; color: #6b7280;">Taxa de Abertura</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="metric-large" style="color: #3b82f6;">7,432</div>
+                        <div style="font-size: 0.875rem; color: #6b7280;">Visualizações</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="metric-large" style="color: #dc2626;">31.8%</div>
+                        <div style="font-size: 0.875rem; color: #6b7280;">Conversão Compra</div>
+                    </div>
+                </div>
+                
+                <div style="background: #fef2f2; padding: 1.5rem; border-radius: 0.75rem; margin-top: 1.5rem; border: 1px solid #fecaca;">
+                    <h4 style="color: #991b1b; margin-bottom: 1rem;">💰 Impacto Financeiro</h4>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-size: 2rem; font-weight: 700; color: #dc2626;">R$ 387,420</div>
+                            <div style="color: #991b1b;">Receita incremental (7 dias)</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="color: #991b1b; margin-bottom: 0.5rem;">
+                                <strong>ROI: 892%</strong> • Custo/aquisição: R$ 3,20
+                            </div>
+                            <div style="font-size: 0.875rem; color: #991b1b;">
+                                2,364 novos clientes conquistados através de receitas
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Insights Tab -->
+        <div id="insights" class="tab-content">
+            <div class="whatsapp-alert">
+                <h3 style="margin-bottom: 0.75rem;">📱 Alertas WhatsApp para Gerentes - Toque Pessoal Aprimorado</h3>
+                <p>Sugestões alimentadas por IA para ajudar gerentes de departamento a manter relacionamentos pessoais com clientes</p>
+            </div>
+
+            <div class="grid grid-cols-2">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">🥩 Carnes & Aves - João Silva (Gerente)</span>
+                        <span class="badge badge-warning">3 Alertas de Cliente</span>
+                    </div>
+                    
+                    <div class="manager-card">
+                        <div class="customer-status">
+                            <div class="status-dot status-declining"></div>
+                            <strong>Maria Santos (Cliente VIP)</strong>
+                        </div>
+                        <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 0.75rem;">
+                            <strong>Mudança Comportamental:</strong> Valor da cesta -30% (R$ 280 → R$ 195)<br>
+                            <strong>Última Compra:</strong> 2 semanas atrás (normalmente semanal)<br>
+                            <strong>Itens Favoritos:</strong> Wagyu, peito de frango orgânico
+                        </p>
+                        <div style="background: #fffbeb; padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 0.75rem;">
+                            <strong>💡 Sugestão IA:</strong> "Oi Maria! Chegou aquele wagyu especial que você adora. Separei um para você - perfeito para o fim de semana! 🥩"
+                        </div>
+                        <div style="background: #fef2f2; padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 0.75rem;">
+                            <strong>🚨 Match Estoque em Risco:</strong> Wagyu Premium expira em 2 dias (Atual: 12 unidades, Demanda prevista: 8)
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%;" onclick="sendWhatsApp('maria-wagyu')">
+                            📱 Enviar Mensagem WhatsApp
+                        </button>
+                    </div>
+
+                    <div class="manager-card">
+                        <div class="customer-status">
+                            <div class="status-dot status-absent"></div>
+                            <strong>Carlos Mendes (Regular)</strong>
+                        </div>
+                        <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 0.75rem;">
+                            <strong>Mudança Comportamental:</strong> Ausente há 5 semanas<br>
+                            <strong>Padrão Anterior:</strong> Compras mensais grandes (R$ 400+)<br>
+                            <strong>Itens Favoritos:</strong> Cortes premium para churrasco, linguiças importadas
+                        </p>
+                        <div style="background: #fffbeb; padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 0.75rem;">
+                            <strong>💡 Sugestão IA:</strong> "E aí Carlos! Faz tempo que não te vejo... Chegou chorizo espanhol novinho, perfeito para seus churrascos!"
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%;" onclick="sendWhatsApp('carlos-return')">
+                            📱 Enviar Mensagem Reativação
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">🐟 Pescados - Ana Costa (Gerente)</span>
+                        <span class="badge badge-danger">2 Alertas Críticos</span>
+                    </div>
+                    
+                    <div class="manager-card">
+                        <div class="customer-status">
+                            <div class="status-dot status-declining"></div>
+                            <strong>Roberto Silva (Amante de Frutos do Mar)</strong>
+                        </div>
+                        <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 0.75rem;">
+                            <strong>Mudança Comportamental:</strong> Frequência -50% (2x/semana → 1x/semana)<br>
+                            <strong>Última Compra:</strong> 10 dias atrás<br>
+                            <strong>Itens Favoritos:</strong> Salmão fresco, atum, robalo
+                        </p>
+                        <div style="background: #fffbeb; padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 0.75rem;">
+                            <strong>💡 Sugestão IA:</strong> "Oi Roberto! Salmão do Atlântico fresquinho chegou hoje. Te guardei o melhor pedaço! 🐟"
+                        </div>
+                        <div style="background: #fef2f2; padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 0.75rem;">
+                            <strong>🚨 Match Perfeito:</strong> Salmão Atlântico expira amanhã! Oportunidade receita com Chef Lidy.
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%;" onclick="sendWhatsApp('roberto-salmao')">
+                            📱 Enviar Oferta Pessoal
+                        </button>
+                    </div>
+
+                    <div class="manager-card">
+                        <div class="customer-status">
+                            <div class="status-dot status-healthy"></div>
+                            <strong>Fernanda Lima (Gourmet)</strong>
+                        </div>
+                        <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 0.75rem;">
+                            <strong>Status:</strong> Cliente saudável, alto engajamento<br>
+                            <strong>Padrão:</strong> Adora experimentar novas receitas<br>
+                            <strong>Oportunidade:</strong> Camarão Tigre + receita Chef Lidy
+                        </p>
+                        <div style="background: #fef2f2; padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 0.75rem; border: 1px solid #fecaca;">
+                            <strong>💡 Oportunidade Receita:</strong> "Fernanda, Chef Lidy criou uma receita incrível com camarão! Quer que eu separe os ingredientes?"
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%;" onclick="sendWhatsApp('fernanda-receita')">
+                            📱 Compartilhar Oferta Receita
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strategic Recommendations -->
+            <div class="card" style="margin-top: 2rem;">
+                <div class="card-header">
+                    <span class="card-title">💡 Recomendações Estratégicas para Escala</span>
+                    <span class="card-subtitle">Próximos passos para expandir a plataforma IA de redução de desperdício em todas as lojas Zona Sul</span>
+                </div>
+                
+                <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                    <div>
+                        <h4 style="color: #dc2626; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <span style="background: #dc2626; color: white; width: 1.5rem; height: 1.5rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">1</span>
+                            Fase 1: Fundação
+                        </h4>
+                        <ul style="font-size: 0.875rem; color: #6b7280; line-height: 1.6;">
+                            <li style="margin-bottom: 0.5rem;">• Implementar em 5 lojas piloto</li>
+                            <li style="margin-bottom: 0.5rem;">• Integrar com sistemas POS existentes</li>
+                            <li style="margin-bottom: 0.5rem;">• Treinar equipe em novos fluxos</li>
+                            <li style="margin-bottom: 0.5rem;">• Estabelecer protocolos de coleta de dados</li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h4 style="color: #991b1b; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <span style="background: #991b1b; color: white; width: 1.5rem; height: 1.5rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">2</span>
+                            Fase 2: Expansão
+                        </h4>
+                        <ul style="font-size: 0.875rem; color: #6b7280; line-height: 1.6;">
+                            <li style="margin-bottom: 0.5rem;">• Expansão para 25 lojas em 6 meses</li>
+                            <li style="margin-bottom: 0.5rem;">• Lançar app móvel para clientes</li>
+                            <li style="margin-bottom: 0.5rem;">• Refinamento avançado modelo ML</li>
+                            <li style="margin-bottom: 0.5rem;">• Parceria com fornecedores locais</li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h4 style="color: #374151; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <span style="background: #374151; color: white; width: 1.5rem; height: 1.5rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">3</span>
+                            Fase 3: Otimização
+                        </h4>
+                        <ul style="font-size: 0.875rem; color: #6b7280; line-height: 1.6;">
+                            <li style="margin-bottom: 0.5rem;">• Liderança da indústria em sustentabilidade</li>
+                            <li style="margin-bottom: 0.5rem;">• Oportunidades parceria entre redes</li>
+                            <li style="margin-bottom: 0.5rem;">• Otimização supply chain alimentada por IA</li>
+                            <li style="margin-bottom: 0.5rem;">• Engine predição comportamental cliente</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="carioca-section" style="margin-top: 2rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <div>
+                            <h4 style="color: #991b1b; font-weight: 700; margin-bottom: 0.5rem;">ROI Esperado - Implementação Completa</h4>
+                            <p style="color: #991b1b; font-size: 0.875rem;">Retornos projetados 18 meses em todas as 44 lojas Zona Sul</p>
+                        </div>
+                        <div style="color: #dc2626; font-size: 1.5rem;">❤️</div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: #dc2626;">R$ 12.8M</div>
+                            <div style="font-size: 0.75rem; color: #991b1b;">Aumento Receita</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: #dc2626;">67%</div>
+                            <div style="font-size: 0.75rem; color: #991b1b;">Redução Desperdício</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: #dc2626;">847%</div>
+                            <div style="font-size: 0.75rem; color: #991b1b;">ROI</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: #dc2626;">25,000+</div>
+                            <div style="font-size: 0.75rem; color: #991b1b;">Retenção Cliente</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 1.5rem; text-align: center;">
+                        <p style="color: #991b1b; font-style: italic; font-weight: 500;">
+                            "Transformando Zona Sul na casa da gastronomia sustentável carioca!"
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+        }
+
+        // Chef selection functionality
+        function selectChef(chefName) {
+            const chefCards = document.querySelectorAll('.chef-card');
+            chefCards.forEach(card => card.classList.remove('active'));
+            
+            event.target.closest('.chef-card').classList.add('active');
+            
+            console.log(`Chef selecionado: ${chefName}`);
+        }
+
+        // Recipe generation functionality
+        function generateRecipe(ingredient) {
+            alert(`Gerando receita Chef Lidy para ${ingredient}... \n\nIsso criaria uma nova receita direcionada para clientes que compraram ${ingredient} anteriormente e não retornaram recentemente!`);
+        }
+
+        // Recipe details functionality
+        function showRecipeDetails(recipeId) {
+            alert(`Abrindo detalhes completos da receita ${recipeId}...\n\nIsso mostraria:\n- Lista completa de ingredientes\n- Instruções passo a passo\n- Informações nutricionais\n- Info de direcionamento cliente`);
+        }
+
+        // WhatsApp functionality
+        function sendWhatsApp(alertId) {
+            const messages = {
+                'maria-wagyu': 'Oi Maria! 👋 Chegou aquele wagyu especial que você adora. Separei um para você - perfeito para o fim de semana! 🥩 Quer que eu guarde?',
+                'carlos-return': 'E aí Carlos! 😊 Faz tempo que não te vejo... Chegou chorizo espanhol novinho, perfeito para seus churrascos! Quando pode passar?',
+                'roberto-salmao': 'Oi Roberto! 🐟 Salmão do Atlântico fresquinho chegou hoje. Te guardei o melhor pedaço! Interessado?',
+                'fernanda-receita': 'Fernanda! 👨‍🍳 Chef Lidy criou uma receita incrível com camarão. Quer que eu separe os ingredientes? Te mando a receita!'
+            };
+            
+            const message = messages[alertId] || 'Mensagem personalizada do gerente';
+            
+            alert(`📱 Preview Mensagem WhatsApp:\n\n"${message}"\n\n✅ Isso seria enviado diretamente através da conta WhatsApp Business do gerente, mantendo o toque pessoal enquanto aproveita insights de IA!`);
+        }
+
+        // Simulate real-time updates
+        function updateMetrics() {
+            console.log('Atualizando métricas em tempo real...');
+        }
+
+        // Update metrics every 30 seconds in a real application
+        setInterval(updateMetrics, 30000);
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Zona Sul AI Food Waste Reduction Platform inicializada');
+            updateMetrics();
+        });
+    </script>
+</body>
+</html>
